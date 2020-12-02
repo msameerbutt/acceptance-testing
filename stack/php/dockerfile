@@ -1,0 +1,69 @@
+FROM php:7.4-fpm-alpine
+
+# Build Time Arguments
+ARG XDEBUG_VERSION=2.9.8
+ARG WORKDIR=/var/www/html
+
+# Setup dependencies
+RUN apk update && apk add --no-cache \
+    bash \
+    icu-dev \
+    imap-dev \
+    libpng-dev \
+    libzip-dev \
+    shadow \
+    vim \
+    zlib-dev
+
+# Install PHP Extensions
+RUN docker-php-ext-install \
+    bcmath \
+    gd \
+    imap \
+    intl \
+    pcntl \
+    pdo_mysql \
+    zip
+
+# Add PHP Configuration files
+ADD ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
+ADD ./conf/custom.ini /usr/local/etc/php/conf.d/custom.ini
+
+# Installing mhsendmail
+RUN wget https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 && \
+    chmod +x mhsendmail_linux_amd64 && \
+    mv mhsendmail_linux_amd64 /usr/local/bin/mhsendmail
+
+# xdebug with VSCODE
+ENV XDEBUG_VERSION=2.9.2
+RUN apk --no-cache add --virtual .build-deps \
+        g++ \
+        autoconf \
+        make && \
+    pecl install xdebug-${XDEBUG_VERSION} && \
+    docker-php-ext-enable xdebug && \
+    apk del .build-deps && \
+    rm -r /tmp/pear/*
+
+# Creat Docker User
+RUN usermod -u 1000 www-data && \
+    groupmod -g 1000 www-data
+
+# Set Utility functions and bash_profile
+COPY ./scripts.sh /usr/local/bin/scripts.sh
+COPY ./.bashrc /home/www-data/.bashrc
+
+# Make Scripts and Bashrc executable
+RUN chmod +x /usr/local/bin/scripts.sh && chmod +x /home/www-data/.bashrc
+
+RUN mkdir -p $WORKDIR
+
+RUN mv /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini.deactivated && \
+    chown -R www-data:www-data $WORKDIR && \
+    chown www-data:www-data /usr/local/etc/php/conf.d && \
+    chown www-data:www-data /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini.deactivated
+
+# Change Docker User
+USER www-data
+
+WORKDIR $WORKDIR

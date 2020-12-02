@@ -1,0 +1,8 @@
+#behat.yml
+default:
+  autoload:
+    '': '%paths.base%/tests/Feature/bootstrap'
+  suites:
+    default:
+      paths:
+        - '%paths.base%/tests/Feature'
