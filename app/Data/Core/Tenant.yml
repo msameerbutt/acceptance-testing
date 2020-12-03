@@ -1,0 +1,106 @@
+Tenant-1:
+  AccountDetails:
+    workspace_name: 'Tenant-1'
+    company_name: 'Tenant-1 Company Name'
+    external_id: 'Tenant-1 External ID'
+    description: 'Tenant-1 Description'
+    licensedcountries:
+      - 'Australia'
+      - 'Sri Lanka'
+    timezone: 'Australia/Melbourne'
+    notes: 'Tenant1 Notes'
+    acceptance_date: '2020-12-01'
+  CompanyContactDetails:
+    email: 'tenant1@adventustesting.com'
+    phone_country_code: '+61'
+    phone_number: '1234567890'
+    address_line1: 'Tenant-1 Address line 1'
+    address_line2: 'Tenant-2 Address line 2'
+    country: 'Sri Lanka'
+    state: 'Colombo'
+    city: 'Colombo'
+    postcode: '12345'
+    postal_address_same: 1
+  RelatedTeams:
+    qcv_team_id: 0
+    admissions_team_id: 0
+    finance_team_id: 0
+    acountmgr_team_id: 0
+  LeadIntegration:
+    lead_integration_team_id: 0
+  Teams:
+    campaign_campaign_team_enabled: 1
+    core_platform_team_enabled: 1
+    core_admin_team_enabled: 1
+    core_account_manager_team_enabled: 1
+    file_file_team_enabled: 0
+    contract_contract_team_enabled: 0
+    contract_contract_billing_enabled: 0
+    inventory_entry_team_enabled: 0
+    inventory_QA_team_enabled: 0
+    inventory_form_team_enabled: 0
+    crm_admissions_team_enabled: 0
+    crm_qcv_team_enabled: 0
+    crm_finance_team_enabled: 0
+    question_question_team_enabled: 0
+    crm_counsellor_team_enabled: 0
+    crm_callCenter_team_enabled: 0
+  Order:
+    order_max_applications: 5
+  Features:
+    predictive_offer_enabled: 1
+    student_portal_enabled: 1
+    assured_consideration_enabled: 1
+Tenant-3:
+  AccountDetails:
+    workspace_name: 'Tenant-2 Workspace'
+    company_name: 'Tenant-2 Company Name'
+    external_id: 'Tenant-2 External ID'
+    description: 'Tenant-2 Description'
+    licensedcountries:
+      - 'Australia'
+      - 'India'
+    timezone: 'Australia/Melbourne'
+    notes: 'Tenant-2 Notes'
+    acceptance_date: '2020-12-01'
+  CompanyContactDetails:
+    email: 'tenant2@adventustesting.com'
+    phone_country_code: '+61'
+    phone_number: '1234567890'
+    address_line1: 'Tenant-2 Address line 1'
+    address_line2: 'Tenant-2 Address line 2'
+    country: 'Sri Lanka'
+    state: 'Colombo'
+    city: 'Colombo'
+    postcode: '12345'
+    postal_address_same: 1
+  RelatedTeams:
+    qcv_team_id: 0
+    admissions_team_id: 0
+    finance_team_id: 0
+    acountmgr_team_id: 0
+  LeadIntegration:
+    lead_integration_team_id: 0
+  Teams:
+    campaign_campaign_team_enabled: 0
+    core_platform_team_enabled: 0
+    core_admin_team_enabled: 0
+    core_account_manager_team_enabled: 0
+    file_file_team_enabled: 0
+    contract_contract_team_enabled: 0
+    contract_contract_billing_enabled: 0
+    inventory_entry_team_enabled: 0
+    inventory_QA_team_enabled: 0
+    inventory_form_team_enabled: 0
+    crm_admissions_team_enabled: 0
+    crm_qcv_team_enabled: 0
+    crm_finance_team_enabled: 0
+    question_question_team_enabled: 0
+    crm_counsellor_team_enabled: 0
+    crm_callCenter_team_enabled: 0
+  Order:
+    order_max_applications: 5
+  Features:
+    predictive_offer_enabled: 0
+    student_portal_enabled: 1
+    assured_consideration_enabled: 0

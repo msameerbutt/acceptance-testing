@@ -1,5 +1,0 @@
-FROM composer:2
-
-ARG WORKDIR=/var/www/html
-
-WORKDIR $WORKDIR

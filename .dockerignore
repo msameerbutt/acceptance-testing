@@ -2,6 +2,8 @@
 .git
 .cache
 
+app/vendor
+
 *.md
 !README.md
 app_data

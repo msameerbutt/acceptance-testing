@@ -1,8 +1,62 @@
 #behat.yml
 default:
+  extensions:
+    Bex\Behat\ScreenshotExtension:
+      screenshot_taking_mode: failed_scenarios
+        # Available modes:
+        #  - failed_steps: Image contains only the screenshot of the failed step. [Default]
+        #  - failed_scenarios: Image contains screenshots of all steps in a failed scenario.
+        #  - all_scenarios: Each scenario has a combined image created, regardless of failing or passing.
+      image_drivers:
+        local:
+          screenshot_directory: /var/www/html/Screenshots
+          clear_screenshot_directory: true  # Enable removing all images before each test run. It is false by default.
+  gherkin:
+    filters:
+      tags: ~@wip
+  formatters:
+    pretty: true
   autoload:
-    '': '%paths.base%/tests/Feature/bootstrap'
+    '': '%paths.base%'
   suites:
     default:
       paths:
-        - '%paths.base%/tests/Feature'
+        - '%paths.base%/Features'
+      contexts:
+        - Behat\MinkExtension\Context\MinkContext
+        - Bootstrap\CommonContext
+        - Bootstrap\LoginContext
+chrome:
+  extensions:
+    Behat\MinkExtension:
+      default_session:  'selenium2'
+      browser_name: chrome
+      goutte: ~
+      selenium2:
+        wd_host: selenium-chrome:4444/wd/hub
+        capabilities:
+          browser: chrome
+          marionette: true
+          version: ''
+          extra_capabilities:
+            - '--disable-gpu'
+            - '--headless'
+            - '--ignore-certificate-errors'
+            - '--no-sandbox'
+            - '--run-all-compositor-stages-before-draw'
+            - '--whitelisted-ips=""'
+            - '--window-size=1920,1080'
+            - '--shm-size=2G'
+            - '--log-path=/var/logs/chrome.log'
+firefox:
+  extensions:
+    Behat\MinkExtension:
+      default_session:  'selenium2'
+      browser_name: firefox
+      goutte: ~
+      selenium2:
+        wd_host: selenium-firefox:4445/wd/hub
+        capabilities:
+          browser: firefox
+          marionette: true
+          version: ''

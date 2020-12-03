@@ -8,42 +8,49 @@ ARG WORKDIR=/var/www/html
 RUN apk update && apk add --no-cache \
     bash \
     icu-dev \
-    imap-dev \
-    libpng-dev \
     libzip-dev \
     shadow \
-    vim \
-    zlib-dev
+    zlib-dev \
+    freetype \
+    freetype-dev \
+    libpng \
+    libpng-dev \
+    libjpeg-turbo \
+    libxml2-dev \
+    libjpeg-turbo-dev g++ make autoconf
+
+# Installing Imagemagick
+RUN set -ex \
+    && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS imagemagick-dev libtool \
+    && export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
+    && pecl install imagick-3.4.3 \
+    && docker-php-ext-enable imagick \
+    && apk add --no-cache --virtual .imagick-runtime-deps imagemagick \
+    && apk del .phpize-deps
 
 # Install PHP Extensions
-RUN docker-php-ext-install \
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install \
     bcmath \
     gd \
-    imap \
-    intl \
-    pcntl \
-    pdo_mysql \
-    zip
+    zip \
+    && apk del --no-cache freetype freetype-dev libpng libpng-dev libjpeg-turbo libjpeg-turbo-dev
+
+RUN apk add --update --no-cache \
+    yaml && \
+    apk add --update --no-cache --virtual .docker-php-symfony-dependancies \
+    yaml-dev && \
+    pecl install yaml && \
+    docker-php-ext-enable yaml; \
+    apk del .docker-php-symfony-dependancies && \
+    php -m;
+
+# copy the Composer PHAR from the Composer image into the PHP image
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer    
 
 # Add PHP Configuration files
 ADD ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 ADD ./conf/custom.ini /usr/local/etc/php/conf.d/custom.ini
-
-# Installing mhsendmail
-RUN wget https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 && \
-    chmod +x mhsendmail_linux_amd64 && \
-    mv mhsendmail_linux_amd64 /usr/local/bin/mhsendmail
-
-# xdebug with VSCODE
-ENV XDEBUG_VERSION=2.9.2
-RUN apk --no-cache add --virtual .build-deps \
-        g++ \
-        autoconf \
-        make && \
-    pecl install xdebug-${XDEBUG_VERSION} && \
-    docker-php-ext-enable xdebug && \
-    apk del .build-deps && \
-    rm -r /tmp/pear/*
 
 # Creat Docker User
 RUN usermod -u 1000 www-data && \
@@ -58,10 +65,8 @@ RUN chmod +x /usr/local/bin/scripts.sh && chmod +x /home/www-data/.bashrc
 
 RUN mkdir -p $WORKDIR
 
-RUN mv /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini.deactivated && \
-    chown -R www-data:www-data $WORKDIR && \
-    chown www-data:www-data /usr/local/etc/php/conf.d && \
-    chown www-data:www-data /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini.deactivated
+RUN chown -R www-data:www-data $WORKDIR && \
+    chown www-data:www-data /usr/local/etc/php/conf.d
 
 # Change Docker User
 USER www-data
